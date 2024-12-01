@@ -69,6 +69,31 @@ public class RoomImpl extends BasicImpl implements Room {
 		}
         return this.edit(stmt);
     }
+    
+    public boolean editRoomWithoutImage(RoomObject item) {
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("UPDATE tblroom SET ");
+        sql.append("room_name=?, admin_id=?, ");
+        sql.append("room_size=?, room_bed_count=?, room_star_count=?, ");
+        sql.append("room_price_per_hour_vnd=?, room_is_available=?, room_note=? ");
+        sql.append("WHERE room_id=?");
+        PreparedStatement stmt = null;
+        try {
+			stmt = con.prepareStatement(sql.toString());
+			stmt.setString(1, item.getRoomName());
+			stmt.setInt(2, item.getAdminId());
+			stmt.setDouble(3, item.getRoomSize());
+			stmt.setInt(4, item.getRoomBedCount());
+			stmt.setInt(5, item.getRoomStarCount());
+			stmt.setDouble(6, item.getRoomPricePerHourVnd());
+			stmt.setBoolean(7, item.isRoomIsAvailable());
+			stmt.setString(8, item.getRoomNote());
+			stmt.setInt(9, item.getRoomId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return this.edit(stmt);
+    }
 
     @Override
     public boolean delRoom(int id) {

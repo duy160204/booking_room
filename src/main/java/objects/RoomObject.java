@@ -21,9 +21,9 @@ public class RoomObject {
         return roomId;
     }
 
-//    public void setRoomId(int roomId) {
-//        this.roomId = roomId;
-//    }
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
 
     public String getRoomName() {
         return roomName;

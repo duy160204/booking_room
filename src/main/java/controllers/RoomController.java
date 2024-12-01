@@ -2,7 +2,12 @@ package controllers;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -10,31 +15,228 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+
+import admin.Admin;
+import admin.AdminImpl;
+import basicUtil.BasicImpl;
+import objects.RoomObject;
 import room.Room;
 import room.RoomImpl;
 //import objects.RoomObject;
 
 @WebServlet("/room")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
-public class PhongController extends HttpServlet {
+public class RoomController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-
-        Room room = new RoomImpl(); 
-        ArrayList<ResultSet> roomList = room.getRooms(null, 0, (byte)100);
-//        request.setAttribute("listPhong", listPhong);
-
-        String action = request.getParameter("action");
-
-        if ("add".equals(action)) {
-            request.setAttribute("showAddModal", true);  // Hiển thị modal thêm phòng
+        
+        HttpSession session = request.getSession(false);
+        if(session == null) {
+        	// chưa đăng nhập
+        	response.sendRedirect(request.getContextPath() + "/login");
+        	return;
         }
+        
+        Integer id = (Integer) session.getAttribute("id");
+        StringBuilder sql = new StringBuilder();
+        String sql1 = "SELECT * FROM tblroom WHERE admin_id = " + id + ";";
+//        System.out.println(sql1);
+        sql.append(sql1);
+        
+        String sql2 = "SELECT COUNT(room_id) AS all_total FROM tblroom;";
+        sql.append(sql2);
+        
 
-        request.getRequestDispatcher("QuanLyPhong.jsp").forward(request, response);
+        BasicImpl basicImpl = new BasicImpl("room controller");
+        List<ResultSet> listResultSet = basicImpl.gets(sql.toString());
+        
+        ResultSet roomResultSet = listResultSet.get(0);
+//        roomResultSet.getBl
+        
+        try {
+        	List<Map<String, Object>> roomList = new ArrayList<>();
+        	while (roomResultSet.next()) {
+        	    Map<String, Object> row = new HashMap<>();
+        	    for (int i = 1; i <= roomResultSet.getMetaData().getColumnCount(); i++) {
+        	        String columnName = roomResultSet.getMetaData().getColumnName(i);
+
+        	        // Handle the room_image column
+        	        if ("room_image".equalsIgnoreCase(columnName)) {
+        	            byte[] imageBytes = roomResultSet.getBytes("room_image");
+        	            if (imageBytes != null) {
+        	                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        	                row.put("room_image", base64Image);
+        	            } else {
+        	                row.put("room_image", null);
+        	            }
+        	        } else {
+        	            row.put(columnName, roomResultSet.getObject(i));
+        	        }
+        	    }
+        	    roomList.add(row);
+        	}
+        	request.setAttribute("roomList", roomList);
+        	// System.out.println(roomList.toString());
+        	request.setAttribute("local_total", roomList.size());
+        	
+        	ResultSet totalResultSet = listResultSet.get(1);
+        	totalResultSet.next();
+            request.setAttribute("all_total", totalResultSet.getInt("all_total"));
+        } catch(SQLException e) {
+        	e.printStackTrace();
+        }
+        request.getRequestDispatcher("quản lý phòng.jsp").forward(request, response);
+        return;
+    }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	response.setContentType("text/html;charset=UTF-8");
+    	request.setCharacterEncoding("UTF-8");
+    	
+    	 HttpSession session = request.getSession(false);
+	    Room room = new RoomImpl();
+	    boolean success;
+         if(session == null) {
+         	// chưa đăng nhập
+         	response.sendRedirect(request.getContextPath() + "/login");
+         	return;
+         }
+         
+         String action = request.getParameter("action");
+         switch(action) {
+         case "add":
+        	System.out.println("in the the add");
+        	// Lấy thông tin phòng từ form
+         	String room_name = request.getParameter("room_name");
+         	Integer admin_id = (Integer) session.getAttribute("id");
+         	byte[] room_image = request.getPart("room_image").getInputStream().readAllBytes();
+         	Double room_size = Double.parseDouble(request.getParameter("room_size"));
+         	Integer room_bed_count = Integer.parseInt(request.getParameter("room_bed_count"));
+         	Integer room_star_count = Integer.parseInt(request.getParameter("room_star_count"));
+         	Double room_price_per_hour_vnd = Double.parseDouble(request.getParameter("room_price_per_hour_vnd"));
+         	Boolean room_is_available = Boolean.parseBoolean(request.getParameter("room_is_available"));
+         	String room_note = request.getParameter("room_note");
+         	
+         	// fill object
+         	RoomObject roomObject = new RoomObject();
+         	roomObject.setRoomName(room_name);
+         	roomObject.setAdminId(admin_id);
+         	roomObject.setRoomImage(room_image);
+         	roomObject.setRoomSize(room_size);
+         	roomObject.setRoomBedCount(room_bed_count);
+         	roomObject.setRoomStarCount(room_star_count);
+         	roomObject.setRoomPricePerHourVnd(room_price_per_hour_vnd);
+         	roomObject.setRoomIsAvailable(room_is_available);
+         	roomObject.setRoomNote(room_note);
+         	
+         	success = room.addRoom(roomObject);
+         	
+     	    if (success) {
+     	        request.setAttribute("message", "Lỗi, hãy thử nhập lại.");
+     	        response.sendRedirect(request.getContextPath() + "/room");
+//     	        request.getRequestDispatcher("QuanLyPhong.jsp").forward(request, response);
+     	    	return;
+     	    } else {
+     	    	request.setAttribute("message", "Thành công!");
+     	        response.sendRedirect(request.getContextPath() + "/room");
+     	        return;
+     	    }
+		case "delete":
+			Integer room_id = Integer.parseInt(request.getParameter("room_id"));
+	    	success = room.delRoom(room_id);
+	    	
+		    if (success) {
+		        request.setAttribute("message", "Lỗi, hãy thử lại.");
+		        response.sendRedirect(request.getContextPath() + "/room");
+//		        request.getRequestDispatcher("QuanLyPhong.jsp").forward(request, response);
+		    	return;
+		    } else {
+		    	request.setAttribute("message", "Thành công!");
+		        response.sendRedirect(request.getContextPath() + "/room");
+		        return;
+		    }
+		case "update":
+			handleUpdate(request, response);
+			return;
+         default:
+        	 break;	 
+         }
+    }
+    
+    private void handleUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    	HttpSession session = request.getSession(false);
+    	System.out.println("in the the update");
+    	// Lấy thông tin phòng từ form
+    	Integer room_id = Integer.parseInt(request.getParameter("room_id"));
+     	String room_name = request.getParameter("room_name");
+     	Integer admin_id = (Integer) session.getAttribute("id");
+     	Part image = request.getPart("room_image");
+     	byte[] room_image = null;
+     	if(image != null) {
+     		room_image = image.getInputStream().readAllBytes();
+     	}
+     	Double room_size = Double.parseDouble(request.getParameter("room_size"));
+     	Integer room_bed_count = Integer.parseInt(request.getParameter("room_bed_count"));
+     	Integer room_star_count = Integer.parseInt(request.getParameter("room_star_count"));
+     	Double room_price_per_hour_vnd = Double.parseDouble(request.getParameter("room_price_per_hour_vnd"));
+     	Boolean room_is_available = Boolean.parseBoolean(request.getParameter("room_is_available"));
+     	String room_note = request.getParameter("room_note");
+     	
+     	// fill object
+     	RoomObject roomObject = new RoomObject();
+     	roomObject.setRoomId(room_id);
+     	roomObject.setRoomName(room_name);
+     	roomObject.setAdminId(admin_id);
+     	roomObject.setRoomImage(room_image);
+     	roomObject.setRoomSize(room_size);
+     	roomObject.setRoomBedCount(room_bed_count);
+     	roomObject.setRoomStarCount(room_star_count);
+     	roomObject.setRoomPricePerHourVnd(room_price_per_hour_vnd);
+     	roomObject.setRoomIsAvailable(room_is_available);
+     	roomObject.setRoomNote(room_note);
+     	
+     	RoomImpl room = new RoomImpl();
+     	boolean success = false;
+     	String isUpdateRoomImage = request.getParameter("is_update_room_image");
+     	System.out.println(isUpdateRoomImage);
+     	if(isUpdateRoomImage != null && isUpdateRoomImage.equals("on")) {
+         	success = room.editRoom(roomObject);
+     	}
+     	else {
+     		success = room.editRoomWithoutImage(roomObject);
+     	}
+     	
+ 	    if (success) {
+ 	        request.setAttribute("message", "Lỗi, hãy thử nhập lại.");
+ 	        response.sendRedirect(request.getContextPath() + "/room");
+// 	        request.getRequestDispatcher("QuanLyPhong.jsp").forward(request, response);
+ 	    	return;
+ 	    } else {
+ 	    	request.setAttribute("message", "Thành công!");
+ 	        response.sendRedirect(request.getContextPath() + "/room");
+ 	        return;
+ 	    }
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	response.setContentType("text/html;charset=UTF-8");
+    	request.setCharacterEncoding("UTF-8");
+    	
+    	HttpSession session = request.getSession(false);
+        if(session == null) {
+        	// chưa đăng nhập
+        	response.sendRedirect(request.getContextPath() + "/login");
+        	return;
+        }
+    	
+    	// Lấy thông tin phòng từ form
+    	
     }
 
 //    // Xử lý yêu cầu POST

@@ -49,13 +49,17 @@ public class LoginController extends HttpServlet {
         	return;
         }
         
+        Integer id = -1;
+        
         try {
         	if(!resultSet.next()) {
         		request.setAttribute("error", "user not found.");
             	request.getRequestDispatcher("login.jsp").forward(request, response);
             	return;
         	}
+        	username = resultSet.getString("admin_username");
         	password = resultSet.getString("admin_password");
+        	id = resultSet.getInt("admin_id");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -63,6 +67,7 @@ public class LoginController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("username", username);
         session.setAttribute("password", password);
+        session.setAttribute("id", id);
         session.setAttribute("error", "đăng nhập thành công nhưng t d redirect.");
         response.sendRedirect(request.getContextPath() + "/dashboard");  // Redirect to default controller
     }

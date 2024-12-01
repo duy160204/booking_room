@@ -62,6 +62,23 @@
 				<div class="col-lg-8">
 					<div class="row">
 
+						<script>
+						function updateStats(containerId, timeFrameId, bookingToday, bookingThisWeek, bookingThisMonth, timeframe) {
+						    document.getElementById(timeFrameId).innerText = `| ` + timeframe;
+						    let bookingCount = bookingToday;
+
+						    if (timeframe === 'Hôm nay') {
+						        bookingCount = bookingToday;
+						    } else if (timeframe === 'Tuần này') {
+						        bookingCount = bookingThisWeek;
+						    } else if (timeframe === 'Tháng này') {
+						        bookingCount = bookingThisMonth;
+						    }
+
+						    document.getElementById(containerId).innerText = bookingCount;
+						}
+						</script>
+
 						<!-- Sales Card -->
 						<div class="col-xxl-4 col-md-6">
 							<div class="card info-card sales-card">
@@ -69,14 +86,16 @@
 									<a class="icon" href="#" data-bs-toggle="dropdown"><i
 										class="bi bi-three-dots"></i></a>
 									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-										<li class="dropdown-header text-start"><h6>Filter</h6></li>
-
-										<li><a class="dropdown-item" href="#"
-											onclick="updateStats1('Hôm nay')">Hôm nay</a></li>
-										<li><a class="dropdown-item" href="#"
-											onclick="updateStats1('Tuần này')">Tuần này</a></li>
-										<li><a class="dropdown-item" href="#"
-											onclick="updateStats1('Tháng này')">Tháng này</a></li>
+										<li class="dropdown-header text-start"><h6>Bộ lọc</h6></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-1', 'time-frame-1', ${requestScope.booking_today}, ${requestScope.booking_thisweek}, ${requestScope.booking_thismonth}, 'Hôm nay')">Hôm
+												nay</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-1', 'time-frame-1', ${requestScope.booking_today}, ${requestScope.booking_thisweek}, ${requestScope.booking_thismonth}, 'Tuần này')">Tuần
+												này</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-1', 'time-frame-1', ${requestScope.booking_today}, ${requestScope.booking_thisweek}, ${requestScope.booking_thismonth}, 'Tháng này')">Tháng
+												này</a></li>
 									</ul>
 								</div>
 
@@ -91,28 +110,15 @@
 											<i class="bi bi-cart"></i>
 										</div>
 										<div class="ps-3">
-											<h6><span id="booking-count-1">${requestScope.booking_today}</span> đơn</h6>
+											<h6>
+												<span id="booking-count-1">${requestScope.booking_today}</span>
+												đơn
+											</h6>
 										</div>
 									</div>
 								</div>
-
 							</div>
 						</div>
-						<script>
-						    function updateStats1(timeframe) {
-						        document.getElementById('time-frame-1').innerText = `| ${timeframe}`;
-						        let bookingCount = ${requestScope.booking_today};
-						        if (timeframe === 'Hôm nay') {
-						            bookingCount = ${requestScope.booking_today};
-						        } else if (timeframe === 'Tuần này') {
-						            bookingCount = ${requestScope.booking_thisweek};
-						        } else if (timeframe === 'Tháng này') {
-						            bookingCount = ${requestScope.booking_thismonth};
-						        }
-						
-						        document.getElementById('booking-count-1').innerText = bookingCount;
-						    }
-						</script> 
 						<!-- End Sales Card -->
 
 						<!-- Revenue Card -->
@@ -127,15 +133,21 @@
 											<h6>Filter</h6>
 										</li>
 
-										<li><a class="dropdown-item" href="#">Today</a></li>
-										<li><a class="dropdown-item" href="#">This Month</a></li>
-										<li><a class="dropdown-item" href="#">This Year</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-2', 'time-frame-2', ${requestScope.revenue_today}, ${requestScope.revenue_thisweek}, ${requestScope.revenue_thismonth}, 'Hôm nay')">Hôm
+												nay</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-2', 'time-frame-2', ${requestScope.revenue_today}, ${requestScope.revenue_thisweek}, ${requestScope.revenue_thismonth}, 'Tuần này')">Tuần
+												này</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-2', 'time-frame-2', ${requestScope.revenue_today}, ${requestScope.revenue_thisweek}, ${requestScope.revenue_thismonth}, 'Tháng này')">Tháng
+												này</a></li>
 									</ul>
 								</div>
 
 								<div class="card-body">
 									<h5 class="card-title">
-										Revenue <span>| This Month</span>
+										Doanh thu <span id="time-frame-2">| Hôm nay</span>
 									</h5>
 
 									<div class="d-flex align-items-center">
@@ -144,9 +156,10 @@
 											<i class="bi bi-currency-dollar"></i>
 										</div>
 										<div class="ps-3">
-											<h6>$3,264</h6>
-											<span class="text-success small pt-1 fw-bold">8%</span> <span
-												class="text-muted small pt-2 ps-1">increase</span>
+											<h6>
+												<span id="booking-count-2">${requestScope.revenue_today}</span>
+												VND
+											</h6>
 
 										</div>
 									</div>
@@ -169,15 +182,21 @@
 											<h6>Filter</h6>
 										</li>
 
-										<li><a class="dropdown-item" href="#">Today</a></li>
-										<li><a class="dropdown-item" href="#">This Month</a></li>
-										<li><a class="dropdown-item" href="#">This Year</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Hôm nay')">Hôm
+												nay</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Tuần này')">Tuần
+												này</a></li>
+										<li><a class="dropdown-item"
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Tháng này')">Tháng
+												này</a></li>
 									</ul>
 								</div>
 
 								<div class="card-body">
 									<h5 class="card-title">
-										Customers <span>| This Year</span>
+										Số khách mới <span id="time-frame-3">| Hôm nay</span>
 									</h5>
 
 									<div class="d-flex align-items-center">
@@ -186,9 +205,11 @@
 											<i class="bi bi-people"></i>
 										</div>
 										<div class="ps-3">
-											<h6>1244</h6>
-											<span class="text-danger small pt-1 fw-bold">12%</span> <span
-												class="text-muted small pt-2 ps-1">decrease</span>
+											<h6>
+												<span id="booking-count-3">${requestScope.customer_today}</span>
+												khách
+											</h6>
+
 
 										</div>
 									</div>
@@ -242,7 +263,7 @@
                           height: 350,
                           type: 'area',
                           toolbar: {
-                            show: false
+                            show: true
                           },
                         },
                         markers: {
