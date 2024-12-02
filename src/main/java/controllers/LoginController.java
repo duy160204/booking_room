@@ -65,9 +65,8 @@ public class LoginController extends HttpServlet {
 		}
         
         HttpSession session = request.getSession();
-        session.setAttribute("username", username);
-        session.setAttribute("password", password);
-        session.setAttribute("id", id);
+        session.setAttribute("admin_id", id);
+        session.setAttribute("admin_username", username);
         session.setAttribute("error", "đăng nhập thành công nhưng t d redirect.");
         response.sendRedirect(request.getContextPath() + "/dashboard");  // Redirect to default controller
     }

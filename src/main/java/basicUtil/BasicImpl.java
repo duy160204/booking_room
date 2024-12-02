@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import connectionUtil.ConnectionPool;
 import connectionUtil.ConnectionPoolImpl;
 
-public class BasicImpl implements Basic {
+public class BasicImpl implements Basic { // basic here is just a interface
     private String objectName; // object to work with Basic
     private ConnectionPool cp = ConnectionPoolImpl.getInstance(); // bộ quản lý kết nối dc chia sẻ
     protected Connection con; // kết nối của riêng Basic sử dụng

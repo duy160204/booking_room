@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import admin.AdminImpl;
 import basicUtil.BasicImpl;
+import services.Authenticate;
 
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
@@ -24,12 +25,11 @@ public class DashboardController extends HttpServlet {
     	response.setContentType("text/html;charset=UTF-8");
     	response.setCharacterEncoding("UTF-8");
     	
-        boolean flag = authenticate(request);
-//        System.out.print(flag);
-        if (!flag) {
+        if(!Authenticate.isLoggedInAsAdmin(request)) {
         	response.sendRedirect(request.getContextPath() + "/login");
             return; 
         }
+        
         StringBuilder sql = new StringBuilder();
         String booking_today = "SELECT COUNT(*) AS booking_today FROM tblbooking WHERE booking_start_date = CURDATE();";
         sql.append(booking_today);
@@ -77,31 +77,30 @@ public class DashboardController extends HttpServlet {
         
     }
     
-    // TODO: thay bằng cơ chế token
-    private boolean authenticate(HttpServletRequest request) {
-//    	System.out.print(1);
-    	HttpSession session = request.getSession(false);
-    	if(session == null) return false;
-//    	System.out.print(2);
-    	String username = (String)session.getAttribute("username");
-    	if(username == null) return false;
-//    	System.out.print(3);
-    	String password = (String)session.getAttribute("password");
-        if(password == null) return false;
-//        System.out.print(4);
-        AdminImpl admin = new AdminImpl();
-        ResultSet resultSet = admin.getAdminByHashPass(username, password);
-        if(resultSet == null) return false;
-//        System.out.print(5);
-        try {
-			if(!resultSet.next()) {
-//				System.out.print(6);
-				return false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        return true;
-    }
+//    private boolean authenticate(HttpServletRequest request) {
+////    	System.out.print(1);
+//    	HttpSession session = request.getSession(false);
+//    	if(session == null) return false;
+////    	System.out.print(2);
+//    	String username = (String)session.getAttribute("username");
+//    	if(username == null) return false;
+////    	System.out.print(3);
+//    	String password = (String)session.getAttribute("password");
+//        if(password == null) return false;
+////        System.out.print(4);
+//        AdminImpl admin = new AdminImpl();
+//        ResultSet resultSet = admin.getAdminByHashPass(username, password);
+//        if(resultSet == null) return false;
+////        System.out.print(5);
+//        try {
+//			if(!resultSet.next()) {
+////				System.out.print(6);
+//				return false;
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//        return true;
+//    }
 }
 
