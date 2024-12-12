@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import admin.AdminImpl;
 import basicUtil.BasicImpl;
-import services.Authenticate;
+import objects.UserObject;
+import services.Util;
 
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
@@ -22,13 +22,14 @@ public class DashboardController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
-    	response.setContentType("text/html;charset=UTF-8");
-    	response.setCharacterEncoding("UTF-8");
+    	Util.setDefaultEncoding(request, response);
     	
-        if(!Authenticate.isLoggedInAsAdmin(request)) {
-        	response.sendRedirect(request.getContextPath() + "/login");
-            return; 
-        }
+    	HttpSession session = request.getSession();
+		UserObject user = (UserObject)session.getAttribute("userLogined");
+		if(user==null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
         
         StringBuilder sql = new StringBuilder();
         String booking_today = "SELECT COUNT(*) AS booking_today FROM tblbooking WHERE booking_start_date = CURDATE();";
@@ -45,12 +46,12 @@ public class DashboardController extends HttpServlet {
         String revenue_thismonth = "SELECT SUM(r.room_price_per_hour_vnd) AS revenue_thismonth FROM tblbooking b JOIN tblroom r ON b.room_id = r.room_id WHERE YEAR(b.booking_start_date) = YEAR(CURRENT_DATE) AND MONTH(b.booking_start_date) = MONTH(CURRENT_DATE);";
         sql.append(revenue_thismonth);
         
-        String customer_today = "SELECT COUNT(*) AS customer_today FROM tblcustomer WHERE DATE(customer_created_at) = CURRENT_DATE;";
-        sql.append(customer_today);
-        String customer_thisweek = "SELECT COUNT(*) AS customer_thisweek FROM tblcustomer WHERE YEARWEEK(customer_created_at, 1) = YEARWEEK(CURRENT_DATE, 1);";
-        sql.append(customer_thisweek);
-        String customer_thismonth = "SELECT COUNT(*) AS customer_thismonth FROM tblcustomer WHERE YEAR(customer_created_at) = YEAR(CURRENT_DATE) AND MONTH(customer_created_at) = MONTH(CURRENT_DATE);";
-        sql.append(customer_thismonth);
+        String user_today = "SELECT COUNT(*) AS user_today FROM tbluser WHERE DATE(user_created_at) = CURRENT_DATE;";
+        sql.append(user_today);
+        String user_thisweek = "SELECT COUNT(*) AS user_thisweek FROM tbluser WHERE YEARWEEK(user_created_at, 1) = YEARWEEK(CURRENT_DATE, 1);";
+        sql.append(user_thisweek);
+        String user_thismonth = "SELECT COUNT(*) AS user_thismonth FROM tbluser WHERE YEAR(user_created_at) = YEAR(CURRENT_DATE) AND MONTH(user_created_at) = MONTH(CURRENT_DATE);";
+        sql.append(user_thismonth);
         
         BasicImpl basicImpl = new BasicImpl("dashboard info");
         List<ResultSet> listResultSet = basicImpl.gets(sql.toString());
@@ -58,17 +59,19 @@ public class DashboardController extends HttpServlet {
         ResultSet result;
         
         try {
-        	result = listResultSet.get(0); result.next(); request.setAttribute("booking_today", result.getInt("booking_today"));
-            result = listResultSet.get(1); result.next(); request.setAttribute("booking_thisweek", result.getInt("booking_thisweek"));
-            result = listResultSet.get(2); result.next(); request.setAttribute("booking_thismonth", result.getInt("booking_thismonth"));
+        	result = listResultSet.get(0); result.next(); request.setAttribute("booking_today", result.getInt("booking_today")); result.close();
+            result = listResultSet.get(1); result.next(); request.setAttribute("booking_thisweek", result.getInt("booking_thisweek")); result.close();
+            result = listResultSet.get(2); result.next(); request.setAttribute("booking_thismonth", result.getInt("booking_thismonth")); result.close();
             
-            result = listResultSet.get(3); result.next(); request.setAttribute("revenue_today", result.getInt("revenue_today"));
-            result = listResultSet.get(4); result.next(); request.setAttribute("revenue_thisweek", result.getInt("revenue_thisweek"));
-            result = listResultSet.get(5); result.next(); request.setAttribute("revenue_thismonth", result.getInt("revenue_thismonth"));
+            result = listResultSet.get(3); result.next(); request.setAttribute("revenue_today", result.getInt("revenue_today")); result.close();
+            result = listResultSet.get(4); result.next(); request.setAttribute("revenue_thisweek", result.getInt("revenue_thisweek")); result.close();
+            result = listResultSet.get(5); result.next(); request.setAttribute("revenue_thismonth", result.getInt("revenue_thismonth")); result.close();
             
-            result = listResultSet.get(6); result.next(); request.setAttribute("customer_today", result.getInt("customer_today"));
-            result = listResultSet.get(7); result.next(); request.setAttribute("customer_thisweek", result.getInt("customer_thisweek"));
-            result = listResultSet.get(8); result.next(); request.setAttribute("customer_thismonth", result.getInt("customer_thismonth"));
+            result = listResultSet.get(6); result.next(); request.setAttribute("user_today", result.getInt("user_today")); result.close();
+            result = listResultSet.get(7); result.next(); request.setAttribute("user_thisweek", result.getInt("user_thisweek")); result.close();
+            result = listResultSet.get(8); result.next(); request.setAttribute("user_thismonth", result.getInt("user_thismonth")); result.close();
+            
+            basicImpl.releaseConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }

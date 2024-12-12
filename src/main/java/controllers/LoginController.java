@@ -1,9 +1,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import admin.Admin;
-import admin.AdminImpl;
+import objects.UserObject;
+import services.Util;
+import user.UserModel;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -21,54 +21,71 @@ public class LoginController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
-		request.getRequestDispatcher("login.jsp").forward(request, response);
+		Util.setDefaultEncoding(request, response);
+		
+		//Tìm tham số báo lỗi nếu có
+		String error = request.getParameter("err");
+		String mes = "";
+		if (error != null) {
+			switch (error) {
+			case "param":
+				mes = "Sai tài khoản hoặc mật khẩu!";
+				break;
+			case "value":
+			case "notOK":
+				mes = "Đăng nhập không thành công";
+				break;
+			default:
+				mes = "Không thành công";
+			}
+		}
+		request.setAttribute("message", mes);
+		
+		RequestDispatcher loginPage = request.getRequestDispatcher("login.jsp");
+		if(loginPage != null) {
+			loginPage.forward(request, response);
+		}
+		return;
 	}
 
 	@Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
 		
-        String username = request.getParameter("username");
-        if(username == null) {
-        	request.setAttribute("error", "username cant be null.");
-        	request.getRequestDispatcher("login.jsp").forward(request, response);
-        	return;
-        }
-        String password = request.getParameter("password");
-        if(password == null) {
-        	request.setAttribute("error", "password cant be null.");
-        	request.getRequestDispatcher("login.jsp").forward(request, response);
-        	return;
-        }
-        
-        Admin admin = new AdminImpl();
-        ResultSet resultSet = admin.getAdmin(username, password);
-        if(resultSet == null) {
-        	request.setAttribute("error", "failed to read from db.");
-        	request.getRequestDispatcher("login.jsp").forward(request, response);
-        	return;
-        }
-        
-        Integer id = -1;
-        
-        try {
-        	if(!resultSet.next()) {
-        		request.setAttribute("error", "user not found.");
-            	request.getRequestDispatcher("login.jsp").forward(request, response);
-            	return;
-        	}
-        	username = resultSet.getString("admin_username");
-        	password = resultSet.getString("admin_password");
-        	id = resultSet.getInt("admin_id");
-		} catch (SQLException e) {
-			e.printStackTrace();
+		
+		//Lấy thông tin trên giao diện
+		String name = request.getParameter("username");
+		String pass = request.getParameter("password");
+		
+		if(name!=null && !name.equalsIgnoreCase("") 
+				&& pass!=null && !pass.equalsIgnoreCase("")) {
+			//Khởi tạo đối tượng thực thi chức năng
+			UserModel model = new UserModel();
+			
+			//Thực hiện đăng nhập
+			UserObject userObject = model.getUserObject(name, pass);
+			
+			//Trả về kết nối
+			model.releaseConnection();
+			
+			if(userObject!=null) {
+				//Tham chiếu phiên làm việc
+				HttpSession session = request.getSession(true);
+				
+				//Đưa thông tin đăng nhập vào phiên
+				session.setAttribute("userLogined", userObject);
+				
+				//Trở về giao diện chính
+				response.sendRedirect(request.getContextPath() + "/dashboard");
+				
+			}else {
+				response.sendRedirect(request.getContextPath() + "/login?err=notOk");
+			}
+			
+		
+		}else {
+			response.sendRedirect(request.getContextPath() + "/login?err=param");
 		}
-        
-        HttpSession session = request.getSession();
-        session.setAttribute("admin_id", id);
-        session.setAttribute("admin_username", username);
-        session.setAttribute("error", "đăng nhập thành công nhưng t d redirect.");
-        response.sendRedirect(request.getContextPath() + "/dashboard");  // Redirect to default controller
     }
 }
 

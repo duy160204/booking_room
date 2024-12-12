@@ -31,14 +31,14 @@ public class ConnectionPoolImpl implements ConnectionPool {
 			System.out.println(objectName + " đã tạo 1 Connection mới.");
 			return DriverManager.getConnection(this.url, this.username, this.password);
 		} else {
-			// System.out.println(objectName + " have popped the Connection.");
+			 System.out.println(objectName + " đã lấy 1 Connection.");
 			return this.pool.pop();
 		}
 	}
 
 	@Override
 	public void releaseConnection(Connection connection, String objectName) throws SQLException {
-		System.out.println(objectName + "Đã trả về 1 connection.");
+		System.out.println(objectName + " đã trả về 1 connection.");
 		this.pool.push(connection);
 	}
 

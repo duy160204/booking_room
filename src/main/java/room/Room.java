@@ -3,9 +3,10 @@ package room;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import basicUtil.ShareControl;
 import objects.RoomObject;
 
-public interface Room {
+public interface Room extends ShareControl {
     boolean addRoom(RoomObject item);
     boolean editRoom(RoomObject item);
     boolean delRoom(int id);

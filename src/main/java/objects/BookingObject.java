@@ -1,37 +1,30 @@
 package objects;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.sql.Date;
 
 public class BookingObject {
     private int bookingId;
-    private int customerId;
     private int roomId;
-    private int bookingState;
+    private Integer bookingState;
     private String bookingComment;
-    private int bookingRate;
+    private Integer bookingRate;
     private Date bookingStartDate;
     private Date bookingEndDate;
-    private int bookingPeopleCount;
+    private Integer bookingPeopleCount;
     private String bookingNote;
     private Timestamp bookingCreatedAt;
     private Timestamp bookingUpdatedAt;
+    private String bookingUuid;
+    private String customerContact;
 
     // Getters and Setters
     public int getBookingId() {
         return bookingId;
     }
 
-//    public void setBookingId(int bookingId) {
-//        this.bookingId = bookingId;
-//    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public int getRoomId() {
@@ -42,11 +35,11 @@ public class BookingObject {
         this.roomId = roomId;
     }
 
-    public int getBookingState() {
+    public Integer getBookingState() {
         return bookingState;
     }
 
-    public void setBookingState(int bookingState) {
+    public void setBookingState(Integer bookingState) {
         this.bookingState = bookingState;
     }
 
@@ -58,11 +51,11 @@ public class BookingObject {
         this.bookingComment = bookingComment;
     }
 
-    public int getBookingRate() {
+    public Integer getBookingRate() {
         return bookingRate;
     }
 
-    public void setBookingRate(int bookingRate) {
+    public void setBookingRate(Integer bookingRate) {
         this.bookingRate = bookingRate;
     }
 
@@ -82,11 +75,11 @@ public class BookingObject {
         this.bookingEndDate = bookingEndDate;
     }
 
-    public int getBookingPeopleCount() {
+    public Integer getBookingPeopleCount() {
         return bookingPeopleCount;
     }
 
-    public void setBookingPeopleCount(int bookingPeopleCount) {
+    public void setBookingPeopleCount(Integer bookingPeopleCount) {
         this.bookingPeopleCount = bookingPeopleCount;
     }
 
@@ -102,16 +95,31 @@ public class BookingObject {
         return bookingCreatedAt;
     }
 
-//    public void setBookingCreatedAt(Timestamp bookingCreatedAt) {
-//        this.bookingCreatedAt = bookingCreatedAt;
-//    }
+    public void setBookingCreatedAt(Timestamp bookingCreatedAt) {
+        this.bookingCreatedAt = bookingCreatedAt;
+    }
 
     public Timestamp getBookingUpdatedAt() {
         return bookingUpdatedAt;
     }
 
-//    public void setBookingUpdatedAt(Timestamp bookingUpdatedAt) {
-//        this.bookingUpdatedAt = bookingUpdatedAt;
-//    }
-}
+    public void setBookingUpdatedAt(Timestamp bookingUpdatedAt) {
+        this.bookingUpdatedAt = bookingUpdatedAt;
+    }
 
+    public String getBookingUuid() {
+        return bookingUuid;
+    }
+
+    public void setBookingUuid(String bookingUuid) {
+        this.bookingUuid = bookingUuid;
+    }
+
+    public String getCustomerContact() {
+        return customerContact;
+    }
+
+    public void setCustomerContact(String customerContact) {
+        this.customerContact = customerContact;
+    }
+}

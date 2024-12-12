@@ -18,22 +18,25 @@ public class BookingImpl extends BasicImpl implements Booking {
     public boolean addBooking(BookingObject item) {
     	StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO tblbooking (");
-        sql.append("customer_id, room_id, booking_state, ");
+        sql.append("room_id, booking_state, ");
         sql.append("booking_comment, booking_rate, booking_start_date, ");
-        sql.append("booking_end_date, booking_people_count, booking_note ");
-        sql.append(") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        sql.append("booking_end_date, booking_people_count, booking_note, ");
+        sql.append("booking_uuid, customer_contact ");
+        sql.append(") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        System.out.println(sql.toString());
     	PreparedStatement stmt = null;
 		try {
 			stmt = con.prepareStatement(sql.toString());
-			stmt.setInt(1, item.getCustomerId());
-			stmt.setInt(2, item.getRoomId());
-			stmt.setInt(3, item.getBookingState());
-			stmt.setString(4, item.getBookingComment());
-			stmt.setInt(5, item.getBookingRate());
-			stmt.setDate(6, item.getBookingStartDate());
-			stmt.setDate(7, item.getBookingEndDate());
-			stmt.setInt(8, item.getBookingPeopleCount());
-			stmt.setString(9, item.getBookingNote());
+			stmt.setInt(1, item.getRoomId());
+			stmt.setInt(2, item.getBookingState());
+			stmt.setString(3, item.getBookingComment());
+			stmt.setInt(4, item.getBookingRate());
+			stmt.setDate(5, item.getBookingStartDate());
+			stmt.setDate(6, item.getBookingEndDate());
+			stmt.setInt(7, item.getBookingPeopleCount());
+			stmt.setString(8, item.getBookingNote());
+			stmt.setString(9, item.getBookingUuid());
+			stmt.setString(10, item.getCustomerContact());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -44,23 +47,58 @@ public class BookingImpl extends BasicImpl implements Booking {
     public boolean editBooking(BookingObject item) {
     	StringBuilder sql = new StringBuilder();
     	sql.append("UPDATE tblbooking SET ");
-    	sql.append("customer_id=?, room_id=?, booking_state=?, ");
+    	sql.append("room_id=?, booking_state=?, ");
         sql.append("booking_comment=?, booking_rate=?, booking_start_date=?, ");
         sql.append("booking_end_date=?, booking_people_count=?, booking_note=? ");
+        sql.append("booking_uuid=?, customer_contact=? ");
         sql.append("WHERE booking_id=?");
         PreparedStatement stmt = null;
         try {
 			stmt = con.prepareStatement(sql.toString());
-			stmt.setInt(1, item.getCustomerId());
-			stmt.setInt(2, item.getRoomId());
-			stmt.setInt(3, item.getBookingState());
-			stmt.setString(4, item.getBookingComment());
-			stmt.setInt(5, item.getBookingRate());
-			stmt.setDate(6, item.getBookingStartDate());
-			stmt.setDate(7, item.getBookingEndDate());
-			stmt.setInt(8, item.getBookingPeopleCount());
-			stmt.setString(9, item.getBookingNote());
-			stmt.setInt(10, item.getBookingId());
+			stmt.setInt(1, item.getRoomId());
+			stmt.setInt(2, item.getBookingState());
+			stmt.setString(3, item.getBookingComment());
+			stmt.setInt(4, item.getBookingRate());
+			stmt.setDate(5, item.getBookingStartDate());
+			stmt.setDate(6, item.getBookingEndDate());
+			stmt.setInt(7, item.getBookingPeopleCount());
+			stmt.setString(8, item.getBookingNote());
+			stmt.setString(9, item.getBookingUuid());
+			stmt.setString(10, item.getCustomerContact());
+			stmt.setInt(11, item.getBookingId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return this.edit(stmt);
+    }
+    
+    public boolean editBookingRateAndComment(BookingObject item) {
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("UPDATE tblbooking SET ");
+        sql.append("booking_comment=?, booking_rate=? ");
+        sql.append("WHERE booking_uuid=?");
+        PreparedStatement stmt = null;
+        try {
+			stmt = con.prepareStatement(sql.toString());
+			stmt.setString(1, item.getBookingComment());
+			stmt.setInt(2, item.getBookingRate());
+			stmt.setString(3,  item.getBookingUuid());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return this.edit(stmt);
+    }
+    
+    public boolean editState(int id, int state) {
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("UPDATE tblbooking SET ");
+    	sql.append("booking_state=? ");
+        sql.append("WHERE booking_id=?");
+        PreparedStatement stmt = null;
+        try {
+			stmt = con.prepareStatement(sql.toString());
+			stmt.setInt(1, state);
+			stmt.setInt(2, id);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -82,112 +120,71 @@ public class BookingImpl extends BasicImpl implements Booking {
 
     @Override
     public ArrayList<ResultSet> getBookings(String multiSelect) {
-        if(multiSelect != null && !"".equalsIgnoreCase(multiSelect)) {
+        if (multiSelect != null && !"".equalsIgnoreCase(multiSelect)) {
             return this.gets(multiSelect);
-        }
-        else {
+        } else {
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT * FROM tblbooking ");
-            sql.append("");
-            sql.append("ORDER BY booking_id DESC ");
-            sql.append("LIMIT 10;");
+
+            // Main SELECT query with JOINs
+            sql.append("SELECT ")
+               .append("b.*, ")  // All columns from tblbooking
+//               .append("c.customer_fullname, ")  // Add customer's full name
+               .append("r.room_name ")  // Add room's name
+               .append("FROM tblbooking b ")
+//               .append("INNER JOIN tblcustomer c ON b.customer_id = c.customer_id ")
+               .append("INNER JOIN tblroom r ON b.room_id = r.room_id ")
+               .append("ORDER BY b.booking_id DESC ")
+               .append("LIMIT 10;");
+
             return this.gets(sql.toString());
         }
     }
 
+
     @Override
     public ResultSet getBooking(int id) {
-        String sql = "SELECT * FROM tblbooking WHERE booking_id=?";
-        return this.get(sql, id);
+//    	String sql = """
+//                SELECT 
+//    			    b.*,
+//    			    c.customer_fullname,
+//    			    r.room_name
+//    			FROM 
+//    			    tblbooking b
+//    			INNER JOIN tblcustomer c ON b.customer_id = c.customer_id
+//    			INNER JOIN 
+//    			    tblroom r ON b.room_id = r.room_id
+//    			WHERE
+//            		booking_id=?
+//                """;
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("SELECT ")
+    		.append("b.*, ")
+    		.append("r.room_name ")
+    		.append("FROM tblbooking b ")
+    		.append("INNER JOIN tblroom ON b.room_id = r.room_id ")
+    		.append("WHERE booking_id=? ");
+        return this.get(sql.toString(), id);
     }
-
-//    @Override
-//    public ResultSet getBooking(String Bookingname, String Bookingpass) {
-//        String sql = "SELCT * FROM tblbooking WHERE (booking_username=?) AND (booking_password=md5(?))";
-//        return this.get(sql, Bookingname, Bookingpass);
-//    }
 
     @Override
     public ArrayList<ResultSet> getBookings(BookingObject similar, int at, byte total) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM tblbooking ");
-        sql.append("");
-        sql.append("ORDER BY booking_id DESC ");
-        sql.append("LIMIT ").append(at).append(", ").append(total).append(";");
+        sql.append("SELECT ")
+           .append("b.*, ")  // All columns from tblbooking
+           .append("r.room_name ")  // Add room's name
+           .append("FROM tblbooking b ")
+           .append("INNER JOIN tblroom r ON b.room_id = r.room_id ")
+           .append("ORDER BY b.booking_id DESC ")
+           .append("LIMIT ").append(at).append(", ").append(total).append(";");
 
-        sql.append("SELECT COUNT(booking_id) AS total FROM tblbooking");
+        // Second query for counting total rows
+        sql.append("SELECT COUNT(b.booking_id) AS total FROM tblbooking b;");
+
         return this.gets(sql.toString());
     }
 
-    public static void main(String[] args) {
-        Booking u = new BookingImpl();
-        
-//         thêm
-//        Admin a = new AdminImpl();
-//        AdminObject adminObject = a.getAdmin("gangplank", "orange");
-        
-        
-//        File file = new File("C:\\Users\\Sweet\\Desktop\\avatar\\a5.jpg");
-//        byte[] content = null;
-//		try {
-//			content = Files.readAllBytes(file.toPath());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-        
-        BookingObject item = new BookingObject();
-//        item.setBookingName("booking1");
-//		item.setAdminId(1);
-//		item.setBookingImage(content);
-//		item.setBookingSize(20.5);
-//		item.setBookingBedCount(3);
-//		item.setBookingStarCount(5);
-//		item.setBookingPricePerHourVnd(250000);
-//		item.setBookingIsAvailable(true);
-		item.setBookingNote("phòng cực đẹp");
-		
-		
-        item.setBookingNote("just a note.");
-        u.addBooking(item);
-        
-//        u.editBooking(item);
-        
-        // sửa
-        
-        
-        
-
-        // list results
-//        ArrayList<ResultSet> results = u.getBookings(null, 0, (byte)15);
-//
-//        
-//        ResultSet result = results.get(0);
-//        
-//        try {
-//            while(result.next()) {
-//            	StringBuilder row = new StringBuilder();
-//                row.append("ID: " + result.getInt("booking_id") + "\t");
-//                
-//                row.append("Note: " + result.getString("booking_note") + "\t");
-//                
-//                row.append("CreatedAt: " + result.getString("booking_created_at") + "\t");
-//                row.append("UpdatedAt: " + result.getString("booking_updated_at") + "\t");
-//                System.out.println(row);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ResultSet result2 = results.get(1);
-//        if(result2 != null) {
-//            try {
-//                while(result2.next()) {
-//                    System.out.println("Tổng số booking: " + result2.getInt("total"));
-//                }
-//                result2.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-    }
+	public ResultSet getBookingByUuid(String uuid) {
+		String sql = "SELECT * FROM tblbooking where booking_uuid=?";
+        return this.get(sql.toString(), uuid);
+	}
 }

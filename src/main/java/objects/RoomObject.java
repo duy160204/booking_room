@@ -1,20 +1,20 @@
 package objects;
 
-import java.sql.Timestamp;
+import java.util.Base64;
 
 public class RoomObject {
+
     private int roomId;
     private String roomName;
-    private int adminId;
-    private byte[] roomImage; // For blob type
+    private byte[] roomImage;
     private double roomSize;
     private int roomBedCount;
     private int roomStarCount;
     private double roomPricePerHourVnd;
     private boolean roomIsAvailable;
     private String roomNote;
-    private Timestamp roomCreatedAt;
-    private Timestamp roomUpdatedAt;
+    private java.sql.Timestamp roomCreatedAt;
+    private java.sql.Timestamp roomUpdatedAt;
 
     // Getters and Setters
     public int getRoomId() {
@@ -33,16 +33,12 @@ public class RoomObject {
         this.roomName = roomName;
     }
 
-    public int getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(int adminId) {
-        this.adminId = adminId;
-    }
-
     public byte[] getRoomImage() {
         return roomImage;
+    }
+    
+    public String getRoomImageBase64() {
+        return Base64.getEncoder().encodeToString(roomImage);
     }
 
     public void setRoomImage(byte[] roomImage) {
@@ -97,20 +93,19 @@ public class RoomObject {
         this.roomNote = roomNote;
     }
 
-    public Timestamp getRoomCreatedAt() {
+    public java.sql.Timestamp getRoomCreatedAt() {
         return roomCreatedAt;
     }
 
-//    public void setRoomCreatedAt(Timestamp roomCreatedAt) {
-//        this.roomCreatedAt = roomCreatedAt;
-//    }
+    public void setRoomCreatedAt(java.sql.Timestamp roomCreatedAt) {
+        this.roomCreatedAt = roomCreatedAt;
+    }
 
-    public Timestamp getRoomUpdatedAt() {
+    public java.sql.Timestamp getRoomUpdatedAt() {
         return roomUpdatedAt;
     }
 
-//    public void setRoomUpdatedAt(Timestamp roomUpdatedAt) {
-//        this.roomUpdatedAt = roomUpdatedAt;
-//    }
+    public void setRoomUpdatedAt(java.sql.Timestamp roomUpdatedAt) {
+        this.roomUpdatedAt = roomUpdatedAt;
+    }
 }
-

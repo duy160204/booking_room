@@ -93,6 +93,20 @@ public class BasicImpl implements Basic { // basic here is just a interface
         }
         return null;
     }
+    
+    public ResultSet get(String sql, String id) {
+    	PreparedStatement preStmt;
+    	ResultSet resultSet;
+        try {
+        	preStmt = this.con.prepareStatement(sql);
+            preStmt.setString(1, id);
+            resultSet = preStmt.executeQuery();
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public ArrayList<ResultSet> gets(String multiSelect) {

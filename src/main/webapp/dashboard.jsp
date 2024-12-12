@@ -183,13 +183,13 @@
 										</li>
 
 										<li><a class="dropdown-item"
-											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Hôm nay')">Hôm
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.user_today}, ${requestScope.user_thisweek}, ${requestScope.user_thismonth}, 'Hôm nay')">Hôm
 												nay</a></li>
 										<li><a class="dropdown-item"
-											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Tuần này')">Tuần
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.user_today}, ${requestScope.user_thisweek}, ${requestScope.user_thismonth}, 'Tuần này')">Tuần
 												này</a></li>
 										<li><a class="dropdown-item"
-											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.customer_today}, ${requestScope.customer_thisweek}, ${requestScope.customer_thismonth}, 'Tháng này')">Tháng
+											onclick="updateStats('booking-count-3', 'time-frame-3', ${requestScope.user_today}, ${requestScope.user_thisweek}, ${requestScope.user_thismonth}, 'Tháng này')">Tháng
 												này</a></li>
 									</ul>
 								</div>
@@ -206,7 +206,7 @@
 										</div>
 										<div class="ps-3">
 											<h6>
-												<span id="booking-count-3">${requestScope.customer_today}</span>
+												<span id="booking-count-3">${requestScope.user_today}</span>
 												khách
 											</h6>
 
