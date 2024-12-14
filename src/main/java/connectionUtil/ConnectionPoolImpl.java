@@ -31,7 +31,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 			System.out.println(objectName + " đã tạo 1 Connection mới.");
 			return DriverManager.getConnection(this.url, this.username, this.password);
 		} else {
-			 System.out.println(objectName + " đã lấy 1 Connection.");
+			 System.out.println(objectName + " đã lấy 1 Connection. horray");
 			return this.pool.pop();
 		}
 	}

@@ -2,7 +2,6 @@ package controllers;
 
 import java.io.*;
 import java.util.*;
-import java.sql.Date;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -10,13 +9,10 @@ import javax.servlet.annotation.*;
 import org.javatuples.Pair;
 
 import objects.BookingDetailObject;
-import objects.BookingObject;
-import objects.RoomObject;
 import objects.UserObject;
-import room.RoomModel;
 import booking.BookingModel;
-import services.Authenticate;
 import services.Util;
+
 @WebServlet("/booking")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
 public class BookingController extends HttpServlet {
@@ -24,8 +20,7 @@ public class BookingController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Util.setDefaultEncoding(request, response);
         
         HttpSession session = request.getSession();
@@ -97,14 +92,12 @@ public class BookingController extends HttpServlet {
         return;
 	}
 
-	private void handleAnonymousUserViewBooking(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleAnonymousUserViewBooking(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendRedirect(request.getContextPath() + "/login");
 	}
 
 	@Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	Util.setDefaultEncoding(request, response);
     	
 //    	System.out.println("Request Parameters:");
@@ -139,8 +132,7 @@ public class BookingController extends HttpServlet {
          }
     }
     
-    private void handleAccept(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    private void handleAccept(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get booking details from the form
       	Integer booking_id = Integer.parseInt(request.getParameter("booking_id"));
       	

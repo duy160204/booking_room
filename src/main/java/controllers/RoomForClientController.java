@@ -9,10 +9,9 @@ import javax.servlet.annotation.*;
 import org.javatuples.Pair;
 
 import objects.RoomObject;
-import room.RoomImpl;
 import room.RoomModel;
-import services.Authenticate;
 import services.Util;
+
 @WebServlet("/roomforclient")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
 public class RoomForClientController extends HttpServlet {

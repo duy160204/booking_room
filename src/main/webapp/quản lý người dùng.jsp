@@ -49,9 +49,10 @@
 						    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
 						        Thêm
 						    </button>
+						    <span>Trang</span>
 						    <select class="form-select w-auto" aria-label="Page selection" id="pageSelect">
 						        <c:forEach var="page" begin="1" end="${totalPages}">
-						            <option value="${page}" ${page == currentPage ? 'selected' : ''}>Trang ${page}</option>
+						            <option value="${page}" ${page == currentPage ? 'selected' : ''}>${page}</option>
 						        </c:forEach>
 						    </select>
 						    <script>
@@ -66,8 +67,8 @@
 							        });
 							    });
 							</script>
-							<p class="mb-0">trên tổng số ${totalPages} trang.</p>		
-							<p class="mb-0">Tổng số người dùng: ${totalItems} </p>				    
+							<p class="mb-0">/ ${totalPages}</p>		
+							<p class="mb-0">Số người dùng: ${totalItems} </p>				    
 						</div>
         				
         				
@@ -88,9 +89,9 @@
 						<table class="table datatable">
   							<thead>
 								<tr>
-									<th scope="col" class="align-middle">ID</th>
-									<th scope="col" class="align-middle">Tài khoản</th>
-									<th scope="col">Tên đầy đủ</th>
+<!-- 									<th scope="col" class="align-middle">ID</th> -->
+<!-- 									<th scope="col" class="align-middle">Tài khoản</th> -->
+									<th scope="col">Họ tên</th>
 									<th scope="col">Điện thoại</th>
 									<th scope="col">Email</th>
 									<th scope="col">Địa chỉ</th>
@@ -103,8 +104,8 @@
   							<tbody>
   							<c:forEach var="row" items="${items}">
 							    <tr title="Ngày sinh: ${row.userBirthday}&#013;Giới tính: ${row.userGender}&#013;Ghi chú: ${row.userNote}&#013;Ngày tạo: ${row.userCreatedAt}&#013;Cập nhật cuối: ${row.userUpdatedAt}">
-							        <td class="align-middle">${row.userId}</td>
-							        <td class="align-middle">${row.userUsername}</td>
+<%-- 							        <td class="align-middle">${row.userId}</td> --%>
+<%-- 							        <td class="align-middle">${row.userUsername}</td> --%>
 							        <td class="align-middle">${row.userFullname}</td>
 							        <td class="align-middle">${row.userPhone}</td>
 							        <td class="align-middle">${row.userEmail}</td>
@@ -153,7 +154,7 @@
 							                                        <input class="form-check-input" type="checkbox" id="is_update_user_password${row.userId}" name="is_update_user_password" onchange="toggleInput('is_update_user_password${row.userId}', 'user_password${row.userId}')">
 							                                    </span>
 							                                    <label for="user_password${row.userId}" class="form-label">Mật khẩu mới</label>
-							                                    <input disabled type="password" class="form-control" id="user_password${row.userId}" name="user_password" required>
+							                                    <input disabled type="password" class="form-control" id="user_password${row.userId}" name="user_password" minlength="8" required>
 							                                </div>
 							
 							                                <!-- Other form fields for user details -->
@@ -230,10 +231,10 @@
 						</div>
 						
 						<div class="mb-3">
-							<label for="user_password" class="form-label">Mật khẩu</label>
-							<input type="password" class="form-control" id="user_password" name="user_password" required>
+						    <label for="user_password" class="form-label">Mật khẩu</label>
+						    <input type="password" class="form-control" id="user_password" name="user_password" required minlength="8">
 						</div>
-
+						
 						<div class="mb-3">
 							<label for="user_fullname" class="form-label">Tên đầy đủ</label>
 							<input type="text" class="form-control" id="user_fullname" name="user_fullname" required>

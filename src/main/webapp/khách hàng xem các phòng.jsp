@@ -87,7 +87,7 @@
     </div>
 </div>
 
-
+<%@ include file="fragments2/footer.jsp" %>
 
         <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
 <!--         <a href="#" class="btn btn-lg btn-primary btn-lg-square"><i class="bi bi-arrow-up"></i></a> -->

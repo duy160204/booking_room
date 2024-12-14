@@ -10,9 +10,8 @@ import org.javatuples.Pair;
 
 import objects.RoomObject;
 import objects.UserObject;
-import room.RoomImpl;
 import room.RoomModel;
-import services.Authenticate;
+
 import services.Util;
 @WebServlet("/room")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
@@ -24,6 +23,7 @@ public class RoomController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
 		Util.setDefaultEncoding(request, response);
+		System.out.println("asdf");
     	
     	HttpSession session = request.getSession();
 		UserObject user = (UserObject)session.getAttribute("userLogined");
@@ -35,8 +35,7 @@ public class RoomController extends HttpServlet {
 		return;
     }
     
-    private void handleUserViewRoom(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    private void handleUserViewRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	//Tìm tham số báo lỗi nếu có
 		String error = request.getParameter("err");
@@ -95,8 +94,7 @@ public class RoomController extends HttpServlet {
 		
 	}
 
-	private void handleAnonymousUserViewRoom(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void handleAnonymousUserViewRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO sửa sau
 		// response.sendRedirect(request.getContextPath() + "/room?err=actionnotdefined");
 		response.sendRedirect(request.getContextPath() + "/login");
@@ -145,8 +143,7 @@ public class RoomController extends HttpServlet {
          }
     }
     
-    private void handleCreate(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    private void handleCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	// Lấy thông tin phòng từ form
      	String room_name = request.getParameter("room_name");
@@ -181,8 +178,7 @@ public class RoomController extends HttpServlet {
      	return;
     }
     
-    private void handleUpdate(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    private void handleUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	// Lấy thông tin phòng từ form
     	Integer room_id = Integer.parseInt(request.getParameter("room_id"));
@@ -229,8 +225,7 @@ public class RoomController extends HttpServlet {
      	return;
     }
 
-    private void handleDelete(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException {
+    private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     	// lấy thông tin từ form
         Integer room_id = Integer.parseInt(request.getParameter("room_id"));
