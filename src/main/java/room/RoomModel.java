@@ -112,4 +112,5 @@ public class RoomModel {
 	public boolean editRoomWithoutImage(RoomObject roomObject) {
 		return this.room.editRoomWithoutImage(roomObject);
 	}
+	
 }

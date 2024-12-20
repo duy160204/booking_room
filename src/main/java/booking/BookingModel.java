@@ -148,6 +148,7 @@ public class BookingModel {
 		}
 		return item;
 	}
+	
 
 	public boolean editBookingRateAndComment(BookingObject bookingObject) {
 		return this.booking.editBookingRateAndComment(bookingObject);

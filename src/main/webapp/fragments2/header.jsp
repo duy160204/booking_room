@@ -42,7 +42,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="index.jsp" class="nav-item nav-link active">Trang chủ</a>
                         <a href="${pageContext.request.contextPath}/roomforclient" class="nav-item nav-link">Phòng</a>
-                        
+                           <a href="${pageContext.request.contextPath}/phong-list" class="nav-item nav-link">Phòng Theo Yêu Cầu</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Khác</a>
                             <div class="dropdown-menu rounded-0 m-0">

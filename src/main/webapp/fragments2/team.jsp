@@ -18,8 +18,8 @@
                         </div>
                     </div>
                     <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Full Name</h5>
-                        <small>Designation</small>
+                        <h5 class="fw-bold mb-0">Bùi Hải Đăng</h5>
+                        <small>Nhà phát triển</small>
                     </div>
                 </div>
             </div>
@@ -34,8 +34,8 @@
                         </div>
                     </div>
                     <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Full Name</h5>
-                        <small>Designation</small>
+                        <h5 class="fw-bold mb-0">Đặng Đức Hiếu</h5>
+                        <small>Nhà phát triển</small>
                     </div>
                 </div>
             </div>
@@ -50,8 +50,8 @@
                         </div>
                     </div>
                     <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Full Name</h5>
-                        <small>Designation</small>
+                        <h5 class="fw-bold mb-0">Hải Đăng Bùi</h5>
+                        <small>Nhà tài trợ</small>
                     </div>
                 </div>
             </div>
@@ -66,8 +66,8 @@
                         </div>
                     </div>
                     <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Full Name</h5>
-                        <small>Designation</small>
+                        <h5 class="fw-bold mb-0">Đào Quốc Huy</h5>
+                        <small>Khách hàng</small>
                     </div>
                 </div>
             </div>
