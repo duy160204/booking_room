@@ -105,9 +105,9 @@ th {
 
 					<script type="text/javascript">
 						// Tự động tắt thông báo sau 3 giây
-// 						setTimeout(function() {
-// 							closeErrorMessage();
-// 						}, 3000);
+					setTimeout(function() {
+							closeErrorMessage();
+					}, 2000);
 
 						// Hàm tắt thông báo khi nhấn nút đóng
 						function closeErrorMessage() {

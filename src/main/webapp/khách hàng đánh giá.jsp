@@ -105,6 +105,9 @@
                             	<span>Ngày kết thúc: ${booking.bookingEndDate}</span>
                             	<span>Số người: ${booking.bookingPeopleCount}</span>
                             	<span>Đặt phòng lúc: ${booking.bookingCreatedAt}</span>
+                            	<span>Email/SĐT: ${booking.customerContact}</span>
+								<span>CCCD: ${booking.customerContact1}</span>
+
                             	<span>UUID: ${booking.bookingUuid}</span>
                                                                 
                                 <div class="col-12"> 

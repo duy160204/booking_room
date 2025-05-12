@@ -61,7 +61,7 @@ public class FindBookingForClientController extends HttpServlet {
  		request.setAttribute("message", mes);
  		
  		BookingModel bookingModel = new BookingModel();
- 		BookingObject bookingObject = bookingModel.getBookingObjectByUuid(uuid);
+ 		BookingObject bookingObject = bookingModel.getBookingObjectByUuid2(uuid);
  		bookingModel.releaseConnection();
 // 		System.out.print("3");
  		if(bookingObject == null) {

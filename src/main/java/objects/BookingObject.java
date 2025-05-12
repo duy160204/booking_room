@@ -17,8 +17,34 @@ public class BookingObject {
     private Timestamp bookingUpdatedAt;
     private String bookingUuid;
     private String customerContact;
+    private String customerContact1;
 
-    // Getters and Setters
+    public BookingObject() {
+		super();
+	}
+
+	public BookingObject(int bookingId, int roomId, Integer bookingState, String bookingComment, Integer bookingRate,
+			Date bookingStartDate, Date bookingEndDate, Integer bookingPeopleCount, String bookingNote,
+			Timestamp bookingCreatedAt, Timestamp bookingUpdatedAt, String bookingUuid, String customerContact,
+			String customerContact1) {
+		super();
+		this.bookingId = bookingId;
+		this.roomId = roomId;
+		this.bookingState = bookingState;
+		this.bookingComment = bookingComment;
+		this.bookingRate = bookingRate;
+		this.bookingStartDate = bookingStartDate;
+		this.bookingEndDate = bookingEndDate;
+		this.bookingPeopleCount = bookingPeopleCount;
+		this.bookingNote = bookingNote;
+		this.bookingCreatedAt = bookingCreatedAt;
+		this.bookingUpdatedAt = bookingUpdatedAt;
+		this.bookingUuid = bookingUuid;
+		this.customerContact = customerContact;
+		this.customerContact1 = customerContact1;
+	}
+
+	// Getters and Setters
     public int getBookingId() {
         return bookingId;
     }
@@ -121,5 +147,13 @@ public class BookingObject {
 
     public void setCustomerContact(String customerContact) {
         this.customerContact = customerContact;
+    }
+    
+    public String getCustomerContact1() {
+        return customerContact1;
+    }
+
+    public void setCustomerContact1(String customerContact1) {
+        this.customerContact1 = customerContact1;
     }
 }

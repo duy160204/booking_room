@@ -21,62 +21,66 @@ public class BookingImpl extends BasicImpl implements Booking {
     
     @Override
     public boolean addBooking(BookingObject item) {
-    	StringBuilder sql = new StringBuilder();
+        StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO tblbooking (");
         sql.append("room_id, booking_state, ");
         sql.append("booking_comment, booking_rate, booking_start_date, ");
         sql.append("booking_end_date, booking_people_count, booking_note, ");
-        sql.append("booking_uuid, customer_contact ");
-        sql.append(") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        sql.append("booking_uuid, customer_contact, customer_contact1 ");
+        sql.append(") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); // thêm dấu ? cho customer_contact1
         System.out.println(sql.toString());
-    	PreparedStatement stmt = null;
-		try {
-			stmt = con.prepareStatement(sql.toString());
-			stmt.setInt(1, item.getRoomId());
-			stmt.setInt(2, item.getBookingState());
-			stmt.setString(3, item.getBookingComment());
-			stmt.setInt(4, item.getBookingRate());
-			stmt.setDate(5, item.getBookingStartDate());
-			stmt.setDate(6, item.getBookingEndDate());
-			stmt.setInt(7, item.getBookingPeopleCount());
-			stmt.setString(8, item.getBookingNote());
-			stmt.setString(9, item.getBookingUuid());
-			stmt.setString(10, item.getCustomerContact());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = con.prepareStatement(sql.toString());
+            stmt.setInt(1, item.getRoomId());
+            stmt.setInt(2, item.getBookingState());
+            stmt.setString(3, item.getBookingComment());
+            stmt.setInt(4, item.getBookingRate());
+            stmt.setDate(5, item.getBookingStartDate());
+            stmt.setDate(6, item.getBookingEndDate());
+            stmt.setInt(7, item.getBookingPeopleCount());
+            stmt.setString(8, item.getBookingNote());
+            stmt.setString(9, item.getBookingUuid());
+            stmt.setString(10, item.getCustomerContact());
+            stmt.setString(11, item.getCustomerContact1()); // dòng mới thêm
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return this.add(stmt);
     }
 
     @Override
     public boolean editBooking(BookingObject item) {
-    	StringBuilder sql = new StringBuilder();
-    	sql.append("UPDATE tblbooking SET ");
-    	sql.append("room_id=?, booking_state=?, ");
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE tblbooking SET ");
+        sql.append("room_id=?, booking_state=?, ");
         sql.append("booking_comment=?, booking_rate=?, booking_start_date=?, ");
-        sql.append("booking_end_date=?, booking_people_count=?, booking_note=? ");
-        sql.append("booking_uuid=?, customer_contact=? ");
+        sql.append("booking_end_date=?, booking_people_count=?, booking_note=?, ");
+        sql.append("booking_uuid=?, customer_contact=?, customer_contact1=? ");
         sql.append("WHERE booking_id=?");
+
         PreparedStatement stmt = null;
         try {
-			stmt = con.prepareStatement(sql.toString());
-			stmt.setInt(1, item.getRoomId());
-			stmt.setInt(2, item.getBookingState());
-			stmt.setString(3, item.getBookingComment());
-			stmt.setInt(4, item.getBookingRate());
-			stmt.setDate(5, item.getBookingStartDate());
-			stmt.setDate(6, item.getBookingEndDate());
-			stmt.setInt(7, item.getBookingPeopleCount());
-			stmt.setString(8, item.getBookingNote());
-			stmt.setString(9, item.getBookingUuid());
-			stmt.setString(10, item.getCustomerContact());
-			stmt.setInt(11, item.getBookingId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+            stmt = con.prepareStatement(sql.toString());
+            stmt.setInt(1, item.getRoomId());
+            stmt.setInt(2, item.getBookingState());
+            stmt.setString(3, item.getBookingComment());
+            stmt.setInt(4, item.getBookingRate());
+            stmt.setDate(5, item.getBookingStartDate());
+            stmt.setDate(6, item.getBookingEndDate());
+            stmt.setInt(7, item.getBookingPeopleCount());
+            stmt.setString(8, item.getBookingNote());
+            stmt.setString(9, item.getBookingUuid());
+            stmt.setString(10, item.getCustomerContact());
+            stmt.setString(11, item.getCustomerContact1()); // thêm dòng này
+            stmt.setInt(12, item.getBookingId()); // cập nhật chỉ số vị trí tham số
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return this.edit(stmt);
     }
-    
+
     public boolean editBookingRateAndComment(BookingObject item) {
     	StringBuilder sql = new StringBuilder();
     	sql.append("UPDATE tblbooking SET ");

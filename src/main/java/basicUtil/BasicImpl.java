@@ -1,6 +1,5 @@
 package basicUtil;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,8 +21,14 @@ public class BasicImpl implements Basic { // basic here is just a interface
         // xin kết nối
         try {
             this.con = this.cp.getConnection(this.objectName);
-            if(this.con.getAutoCommit()) // kiểm tra chế độ thực thi của kết nối
-                this.con.setAutoCommit(false); // huỷ chế độ
+            
+            // Kiểm tra con không phải null trước khi sử dụng
+            if (this.con != null) {
+                if(this.con.getAutoCommit()) // kiểm tra chế độ thực thi của kết nối
+                    this.con.setAutoCommit(false); // huỷ chế độ
+            } else {
+                System.err.println("Không thể lấy kết nối từ ConnectionPool cho " + this.objectName);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -31,6 +36,10 @@ public class BasicImpl implements Basic { // basic here is just a interface
 
     private boolean execute(PreparedStatement preStmt) {
         if(preStmt == null) return false;
+        
+        // Kiểm tra con không phải null trước khi sử dụng
+        if (this.con == null) return false;
+        
         try {
             int recordAffectedCount = preStmt.executeUpdate();
             if (recordAffectedCount == 0) {
@@ -42,15 +51,18 @@ public class BasicImpl implements Basic { // basic here is just a interface
         }
         catch(SQLException e) { // trở lại trạng thái an toàn của kết nối
             e.printStackTrace();
-            try { this.con.rollback(); } 
+            try {
+                if (this.con != null)
+                    this.con.rollback(); 
+            } 
             catch (SQLException e1) { e1.printStackTrace(); }
         }
-		return false;
+        return false;
     }
 
     @Override
     public boolean add(PreparedStatement preStmt) {
-    	return this.execute(preStmt);
+        return this.execute(preStmt);
     }
 
     @Override
@@ -65,10 +77,13 @@ public class BasicImpl implements Basic { // basic here is just a interface
 
     @Override
     public ResultSet get(String sql, int value) {
-    	PreparedStatement preStmt;
-    	ResultSet resultSet;
+        // Kiểm tra con không phải null trước khi sử dụng
+        if (this.con == null) return null;
+        
+        PreparedStatement preStmt;
+        ResultSet resultSet;
         try {
-        	preStmt = this.con.prepareStatement(sql);
+            preStmt = this.con.prepareStatement(sql);
             if(value > 0) preStmt.setInt(1, value);
             resultSet = preStmt.executeQuery();
             return resultSet;
@@ -80,10 +95,13 @@ public class BasicImpl implements Basic { // basic here is just a interface
 
     @Override
     public ResultSet get(String sql, String name, String pass) {
-    	PreparedStatement preStmt;
-    	ResultSet resultSet;
+        // Kiểm tra con không phải null trước khi sử dụng
+        if (this.con == null) return null;
+        
+        PreparedStatement preStmt;
+        ResultSet resultSet;
         try {
-        	preStmt = this.con.prepareStatement(sql);
+            preStmt = this.con.prepareStatement(sql);
             preStmt.setString(1, name);
             preStmt.setString(2, pass);
             resultSet = preStmt.executeQuery();
@@ -95,10 +113,13 @@ public class BasicImpl implements Basic { // basic here is just a interface
     }
     
     public ResultSet get(String sql, String id) {
-    	PreparedStatement preStmt;
-    	ResultSet resultSet;
+        // Kiểm tra con không phải null trước khi sử dụng
+        if (this.con == null) return null;
+        
+        PreparedStatement preStmt;
+        ResultSet resultSet;
         try {
-        	preStmt = this.con.prepareStatement(sql);
+            preStmt = this.con.prepareStatement(sql);
             preStmt.setString(1, id);
             resultSet = preStmt.executeQuery();
             return resultSet;
@@ -110,6 +131,9 @@ public class BasicImpl implements Basic { // basic here is just a interface
 
     @Override
     public ArrayList<ResultSet> gets(String multiSelect) {
+        // Kiểm tra con không phải null trước khi sử dụng
+        if (this.con == null) return new ArrayList<>();
+        
         ArrayList<ResultSet> resultSetArray = new ArrayList<>();
         try {
             PreparedStatement stmt = this.con.prepareStatement(multiSelect);
@@ -131,7 +155,10 @@ public class BasicImpl implements Basic { // basic here is just a interface
     @Override
     public void releaseConnection() {
         try {
-            this.cp.releaseConnection(this.con, this.objectName);
+            if (this.con != null) {
+                this.cp.releaseConnection(this.con, this.objectName);
+                this.con = null; // Đặt kết nối về null sau khi trả lại
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -140,5 +167,4 @@ public class BasicImpl implements Basic { // basic here is just a interface
     protected void finalize() throws Throwable {
         this.releaseConnection();
     }
-    
 }

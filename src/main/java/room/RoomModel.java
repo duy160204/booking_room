@@ -66,7 +66,7 @@ public class RoomModel {
 		int at = (page - 1) * total;
 		
 		ArrayList<ResultSet> res = this.room.getRooms(similar, at, total);
-		
+		System.out.println(res.toString());
 		ResultSet rs = res.get(0);
 		
 		if(rs != null) {

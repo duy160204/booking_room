@@ -15,9 +15,9 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
 	private ConnectionPoolImpl() {
 		this.driver = "com.mysql.cj.jdbc.Driver";
-		this.url = "jdbc:mysql://localhost:3311/khachsan_database?allowMultiQueries=true";
-		this.username = "tranhanh_dangbh";
-		this.password = "@123$%65";
+		this.url = "jdbc:mysql://localhost:3306/khach_san?allowMultiQueries=true";
+		this.username = "root";
+		this.password = "123456";
 
 		try { Class.forName(this.driver); } 
 		catch (ClassNotFoundException e) { e.printStackTrace(); }

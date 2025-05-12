@@ -26,7 +26,7 @@
                 	
               			<c:if test="${flag == 'ok'}">
               			    <div class="alert alert-success my-0">
-            					<strong>Quý khách đã đăng ký đặt phòng thành công.</strong> Hãy lưu lại mã đặt phòng sau:
+            					<strong>Đã gửi đơn thành công, vui lòng để ý mail hoặc điện thoại từ nhân viên để nhận thông tin phòng của bạn.</strong> Hãy lưu lại mã đặt phòng sau:
             					<h3>${uuid }</h3>
             				</div>					        
 					    </c:if>
@@ -113,6 +113,10 @@
                                 	<input type="date" name="booking_end_date" class="form-control datetimepicker-input"/>
                                 </div>
                                 
+                                <div class="col-12">
+                                	<label class="mb-1">Số CCCD/Hộ chiếu:</label>
+                                	<input type="text" name="customer_contact1" class="form-control"/>
+                                </div>
                                 <div class="col-12">
                                 	<label class="mb-1">Email hoặc SĐT</label>
                                 	<input type="text" name="customer_contact" class="form-control"/>

@@ -63,8 +63,8 @@
                         
                         
                     </div>
-                    <form id="searchform" class="d-flex align-items-center w-50 mr-auto py-0 gap-3" method="get" action="${pageContext.request.contextPath}/findbookingforclient">
-                        	<input type="text" name="uuid" class="form-control" placeholder="Nhập mã đặt phòng đã đặt tại đây..."></input>
+                    <form id="searchform" class="d-flex align-items-center w-50 mr-auto py-0 gap-3" method="get" action="${pageContext.request.contextPath}/phong-list-3">
+                        	<input type="text" name="uuid" class="form-control" placeholder="Nhập sdt,cccd hoặc email tại đây..."></input>
                         	<button type="submit" class="btn btn-sm btn-light rounded">Tìm</button>
                         </form>
 <!--                     <div> -->

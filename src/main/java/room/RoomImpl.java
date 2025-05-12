@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import org.eclipse.jdt.internal.compiler.batch.Main;
+
 
 import basicUtil.BasicImpl;
 import booking.BookingImpl;
@@ -323,6 +323,8 @@ public class RoomImpl extends BasicImpl implements Room {
 		sql.append("LIMIT ").append(at).append(", ").append(total).append(";");
 
 		sql.append("SELECT COUNT(room_id) AS total FROM tblroom");
+		System.out.println(" -----------");
+		System.out.println(sql.toString());
 		return this.gets(sql.toString());
 	}
 

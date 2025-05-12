@@ -55,7 +55,14 @@
        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="room-item shadow rounded overflow-hidden">
                     <div class="position-relative">
-                        <img style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;" src="data:image/jpeg;base64,${row.roomImageBase64}" alt="${row.roomName}">
+                      <a href="${pageContext.request.contextPath}/bookingforclient?room_id=${row.roomId}">
+  <img
+    style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;"
+    src="data:image/jpeg;base64,${row.roomImageBase64}"
+    alt="${row.roomName}"
+  >
+</a>
+
                         <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">${row.roomPricePerHourVnd }₫/đêm </small>
                     </div>
                     <div class="p-4 mt-2">

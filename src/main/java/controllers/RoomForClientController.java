@@ -32,6 +32,7 @@ public class RoomForClientController extends HttpServlet {
         byte totalPerPage = 12;
           
         RoomModel roomModel = new RoomModel();
+ 
         Pair<ArrayList<RoomObject>, Integer> returnSet = roomModel.getRoomObjects(new RoomObject(), currentPage, totalPerPage);
         ArrayList<RoomObject> itemsOfCurrentPage = returnSet.getValue0();
         Integer totalItems = returnSet.getValue1();
